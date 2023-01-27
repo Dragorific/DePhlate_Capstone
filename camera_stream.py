@@ -1,4 +1,3 @@
-from imutils.video import VideoStream
 import argparse
 import datetime
 import imutils
