@@ -1,0 +1,56 @@
+body .container-fluid {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(4.8%, #1A535C), color-stop(82.81%, #4ECDC4));
+  background: linear-gradient(180deg, #1A535C 4.8%, #4ECDC4 82.81%);
+  height: 100vh;
+}
+
+body .container-fluid .navbar {
+  background-color: #2c7e81;
+}
+
+body .container-fluid .navbar .navbar-brand {
+  font-family: Baumans;
+}
+
+body .container-fluid .navbar .navbar-menu {
+  height: 0;
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+  -webkit-transition: height 500ms ease;
+  transition: height 500ms ease;
+}
+
+body .container-fluid .navbar .navbar-menu .dropdownList {
+  display: none;
+}
+
+body .container-fluid .navbar .navbar-menu .dropdownList .list-group-item {
+  background-color: #2c7e81;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.125);
+  color: white;
+}
+
+body .container-fluid .navbar .show {
+  height: 122.667px;
+  -webkit-transition: height 500ms ease;
+  transition: height 500ms ease;
+}
+
+body .container-fluid .brand {
+  text-align: center;
+  position: relative;
+  top: 20%;
+}
+
+body .container-fluid .brand h2 {
+  font-family: 'Baumans';
+  font-size: calc(4rem + 7vw);
+  color: white;
+}
+
+body .container-fluid .brand h1 {
+  font-family: 'Koh Santepheap';
+  color: white;
+  font-weight: 300;
+}
+/*# sourceMappingURL=style.css.map */
