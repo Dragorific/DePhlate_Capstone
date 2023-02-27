@@ -1,7 +1,7 @@
 import openai
 
 # Set up the OpenAI API key
-openai.api_key = "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"
+openai.api_key = ""
 
 # Define a function to get a response from ChatGPT
 def get_response(prompt):
