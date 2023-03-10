@@ -16,6 +16,10 @@ body{
             transition: height 500ms ease;
             .dropdownList{
                 display: none;
+                a{
+                    text-decoration: none;
+                    color: #FFFAEB;
+                }
                 .list-group-item{
                     background-color: #2c7e81;
                     border-bottom: 1.5px solid rgba(0, 0, 0, 0.125);
@@ -107,14 +111,90 @@ body{
 
     }
 
-    .mission-box{
+    #mission-box{
         height: 100vh;
         background-color: #FFFAEB;
-        p{
+        position: relative;
+     
+        .header{
             font-family: 'Baumans';
-            font-size: calc(3rem + 7vw);
+            // font-size: calc(3rem + 7vw);
+            font-size: calc(2rem + 6vw);
             color: #2c7e81;
-            text-align: center;
+            margin: 0 0 24px 0;
+        }
+        img{
+            width: calc(180px + 10vw);
+            margin: -35px calc(50% - (180px + 10vw)/2) 16px;
+        }
+        .txt{
+            margin: 0 10vw;
+            .description{
+                color: #2c7e81;
+                font-family: 'Koh Santepheap';
+                font-size: calc(1rem + 1vw);
+                margin: 0;
+            }
         }
     }
+
+    #what-box{
+        height: 100vh;
+        background: linear-gradient(180deg, #4ECDC4 4.8%, #1A535C 82.81%);
+        position: relative;
+     
+        .header{
+            font-family: 'Baumans';
+            font-size: calc(2rem + 6vw);
+            color: #FFFAEB;
+            margin: 0;
+        }
+        svg{
+            margin: 0 calc(50% - 80px);
+        }
+        .txt{
+            margin: 0 10vw;
+            .description{
+                color: #FFFAEB;
+                font-family: 'Koh Santepheap';
+                font-size: calc(1rem + 1vw);
+                margin: 24px 0 0 0;
+            }
+        }
+    }
+
+    #features-box{
+        height: 100vh;
+        background-color: #FFFAEB;
+        position: relative;
+        .section{
+            width: 100%;
+            .header{
+                font-family: 'Baumans';
+                // font-size: calc(3rem + 7vw);
+                font-size: calc(2rem + 6vw);
+                color: #2c7e81;
+                margin: 0 0 24px 0;
+            }
+            img{
+                width: calc(120px + 10vw);
+                margin: -35px calc(50% - (120px + 10vw)/2) 16px;
+            }
+            .txt{
+                margin: 0 10vw;
+                ul{
+                    text-align: center;
+                    list-style-position: inside;
+                    padding: 0;
+                    li{
+                        color: #2c7e81;
+                        font-family: 'Koh Santepheap';
+                        font-size: calc(1rem + 1vw);
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+
 }
