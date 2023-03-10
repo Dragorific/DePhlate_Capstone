@@ -4,9 +4,14 @@ import imutils
 import time
 import numpy as np
 import cv2
+from clarifai import clarifaiFood
+import base64
+from nutrition import get_food_info
 
 capture = cv2.VideoCapture(0)
 firstFrame = None
+oldX = 0
+oldY = 0
 
 # Check if the webcam is opened correctly
 if not capture.isOpened():
@@ -40,14 +45,27 @@ while True:
     contours = imutils.grab_contours(contours)
 
     for contour in contours:
-        if cv2.contourArea(contour) < 500:
+        if cv2.contourArea(contour) < 2000:
             continue
 
         (x, y, w, h) = cv2.boundingRect(contour)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        text = "Occupied"
+        if(oldX == x and oldY == y):
+            foodImg = frame[y:y+h, x:x+w]
+            cv2.imwrite("foodCutOut.jpg", foodImg)
+            with open('foodCutOut.jpg', 'rb') as file:
+                image_data = file.read()
+                image_bytes = bytes(image_data)
+            
+            prediction, rating = clarifaiFood(image_bytes)
+            calories = str(get_food_info(prediction.upper()))
+            text = prediction + ", confidence: " + rating + ", calories: " + calories
+        else:
+            oldX = x
+            oldY = y
+        
 
-    cv2.putText(frame, "Status: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    cv2.putText(frame, "Output: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), 
                 (10, frame.shape[0] - 10), 
                 cv2.FONT_HERSHEY_SIMPLEX, 

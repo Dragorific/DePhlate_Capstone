@@ -6,7 +6,7 @@ openai.api_key = ""
 # Define a function to get a response from ChatGPT
 def get_response(prompt):
     response = openai.Completion.create(
-        engine="text-davinci-003",
+        engine="gpt-3.5-turbo-0301",
         prompt=prompt,
         max_tokens=1024,  # The maximum number of tokens (words and punctuation) that the generated text can have. The actual number of tokens in the generated text may be less than this value.
         n=1,              # The number of responses to generate. In most cases, you'll only need one response, so you can set this to 1.
