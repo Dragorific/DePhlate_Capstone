@@ -1,33 +1,33 @@
+import json
 import requests
 
 # This function returns the fdc Id
 def get_fdc_id(api, parameters):
     response = requests.get(f"{api}", params=parameters)
     if response.status_code == 200:
-        print("sucessfully fetched the data with parameters provided")
+        print("successfully fetched the fdc ID with parameters provided")
         return(response.json()['foods'][0]['fdcId'])
     else:
-        print(
-            f"Hello person, there's a {response.status_code} error with your request")
+        print(f"Hello person, there's a {response.status_code} error with your request")
 
 # This function prints the item info based on the fdc Id
 def get_food_info(api, parameters):
     response = requests.get(f"{api}", params=parameters)
     if response.status_code == 200:
-        print("sucessfully fetched the data with parameters provided")
+        print("sucessfully fetched the food info with parameters provided")
         json_body = response.json()
+        
         name = json_body['description']
         calories = json_body['labelNutrients']['calories']['value']
-        print("the total calories for",name,"are",calories,"sourced from the USDA FoodData database")
+        print("The total calories for", name, "are", calories, "sourced from the USDA FoodData database.")
     else:
-        print(
-            f"Hello person, there's a {response.status_code} error with your request")
+        print(f"Hello person, there's a {response.status_code} error with your request")
 
 # Make the first request to obtain the fdc Id of a string query item
 api_id = "https://api.nal.usda.gov/fdc/v1/foods/search"
 params = {
     "api_key":"DEMO_KEY",
-    "query":"cheeseburger"      # This needs to change to support what our detection API gets
+    "query":"pretzel"      # This needs to change to support what our detection API gets
 }
 
 fdcId = get_fdc_id(api_id, params)
