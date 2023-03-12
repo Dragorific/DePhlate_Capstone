@@ -44,7 +44,7 @@ class SettingsForm(Popup):
         self.form_layout.add_widget(Label(text="Gender"))
         self.gender_input = Spinner(
             text='Select Gender',
-            values=['Male', 'Female'],
+            values=['Male', 'Female', 'Mental Disability'],
             size_hint=(None, None),
             size=(200, 50)
         )
@@ -54,7 +54,7 @@ class SettingsForm(Popup):
         self.form_layout.add_widget(Label(text="Height"))
         self.height_input = Spinner(
             text='Select Height in cm',
-            values=['150', '160', '170', '180', '190', '200'],
+            values=["{:02d}".format(x) for x in range(140, 200, 5)],
             size_hint=(None, None),
             size=(200, 50)
         )

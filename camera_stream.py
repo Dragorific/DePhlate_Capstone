@@ -5,12 +5,12 @@ import time
 import numpy as np
 import cv2
 from clarifai import clarifaiFood
-import base64
 from nutrition import get_food_info
 from serial_sensor import get_measurement
 
 capture = cv2.VideoCapture(0)
 firstFrame = None
+text = "Unoccupied"
 oldX = 0
 oldY = 0
 
@@ -21,7 +21,6 @@ if not capture.isOpened():
 while True:
     ret, frame = capture.read()
     frame = cv2.flip(frame, 1)
-    text = "Unoccupied"
 
     c = cv2.waitKey(1)
     if c == 27:
@@ -63,6 +62,7 @@ while True:
             weight = get_measurement()
             calories = str(calories*(weight/serving_size))
             text = prediction + ", confidence: " + rating + ", calories: " + calories
+            firstFrame = gray
         else:
             oldX = x
             oldY = y
