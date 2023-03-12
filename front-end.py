@@ -9,8 +9,60 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.spinner import Spinner
+from kivy.uix.scrollview import ScrollView
+from openAIAPI import get_response
+from openAIAPI import start_conversation
 import subprocess
 import json
+
+QUESTION = ""
+
+
+class MyApp(App):
+    def build(self):
+        # Create the root widget
+        root_widget = MyGridLayout()
+
+        # Return the root widget
+        return root_widget
+
+
+class AIAdvice(Popup):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.title = "Health Advice"
+        self.size_hint = (0.9,0.9)
+
+        self.form_layout = GridLayout(cols=1)
+               
+        self.advice_text = Label(text= QUESTION, halign='center', valign='top', size_hint_y=None, height=500, text_size=(None, None))
+        self.advice_scrollview = ScrollView(size_hint=(0.8, 0.8))
+        self.advice_scrollview.add_widget(self.advice_text)
+        self.form_layout.add_widget(self.advice_scrollview)
+
+
+        # Add a TextInput for the user to input their question
+        self.question_input = TextInput(multiline=False, hint_text='Enter your question here', size_hint_y=None, height=50)
+        self.form_layout.add_widget(self.question_input)
+
+        # Add a Button to submit the question
+        self.submit_button = Button(text='Submit', size_hint_y=None, height=50, on_press=self.submit_question)
+        self.form_layout.add_widget(self.submit_button)
+
+        self.add_widget(self.form_layout)
+        
+
+    def submit_question(self, instance):
+    # Retrieve the user's question from the TextInput
+        
+        prompt = f"I am a {age} year old {gender}, I weigh {weight} and am {height}cm tall."
+
+        #ADVICE = get_response(prompt)
+        question = prompt + self.question_input.text
+    
+        # Process the user's question and display the response
+        response = start_conversation(question)
+        self.advice_text.text = response
 
 class SettingsForm(Popup):
     def __init__(self, **kwargs):
@@ -86,14 +138,13 @@ class SettingsForm(Popup):
         }
 
         # Save the data to a text file in JSON format
-        with open("data.txt", "a") as f:
+        with open("data.txt", "w") as f:
             f.write(json.dumps(data))
             f.write("\n")
             f.close()
 
         # Close the popup
         self.dismiss()
-
     
 
 class MyGridLayout(GridLayout):
@@ -123,11 +174,16 @@ class MyGridLayout(GridLayout):
         self.settings_button = Button(text="Settings", font_size=40, size_hint=(None, 1), width=300, size_hint_x=0.4)
         self.settings_button.bind(on_press=self.open_settings)
 
+        # Add the "Health Adivce" button
+        self.advice_button = Button(text="Health Advice", font_size=35, size_hint=(None, 1), width=300, size_hint_x=0.4)
+        self.advice_button.bind(on_press=self.open_AIAdvice)        
+
         # Create a BoxLayout to center the two buttons horizontally
         button_box = BoxLayout(orientation='horizontal', size_hint_y=0.3, width=self.width, spacing=20)
         button_box.padding = (50, 0, 50, 20)             # Set the left and right padding to 50 pixels, (left, top, right, bottom)
         button_box.add_widget(self.start_button)
         button_box.add_widget(self.settings_button)
+        button_box.add_widget(self.advice_button)
         button_box.align = 'center'                     # Set the align property to center the buttons horizontally
         self.add_widget(button_box)
 
@@ -138,6 +194,10 @@ class MyGridLayout(GridLayout):
         form = SettingsForm()
         form.open()
 
+    def open_AIAdvice(self, instance):
+        form = AIAdvice()
+        form.open()
+        
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
@@ -147,4 +207,14 @@ class MyKivyApp(App):
         return MyGridLayout()
 
 if __name__ == "__main__":
+    with open('data.txt', 'r') as file:
+        json_data = file.read()
+
+    data = json.loads(json_data)
+
+    age = data["user-info"]["age"]
+    weight = data["user-info"]["weight"]
+    gender = data["user-info"]["gender"]
+    height = data["user-info"]["height"]
+
     MyKivyApp().run()
