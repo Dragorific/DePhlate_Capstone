@@ -7,6 +7,7 @@ import cv2
 from clarifai import clarifaiFood
 import base64
 from nutrition import get_food_info
+from serial_sensor import get_measurement
 
 capture = cv2.VideoCapture(0)
 firstFrame = None
@@ -58,7 +59,9 @@ while True:
                 image_bytes = bytes(image_data)
             
             prediction, rating = clarifaiFood(image_bytes)
-            calories = str(get_food_info(prediction.upper()))
+            calories, serving_size = get_food_info(prediction.upper())
+            weight = get_measurement()
+            calories = str(calories*(weight/serving_size))
             text = prediction + ", confidence: " + rating + ", calories: " + calories
         else:
             oldX = x
