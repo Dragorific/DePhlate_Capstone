@@ -1,4 +1,6 @@
 import openai
+import sys
+
 
 # Set up the OpenAI API key
 openai.api_key = ""
@@ -6,7 +8,7 @@ openai.api_key = ""
 # Define a function to get a response from ChatGPT
 def get_response(prompt):
     response = openai.Completion.create(
-        engine="gpt-3.5-turbo-0301",
+        engine="text-davinci-003",
         prompt=prompt,
         max_tokens=1024,  # The maximum number of tokens (words and punctuation) that the generated text can have. The actual number of tokens in the generated text may be less than this value.
         n=1,              # The number of responses to generate. In most cases, you'll only need one response, so you can set this to 1.
@@ -23,36 +25,43 @@ def provide_health_advice(nutrition_info):
     # In this example, we'll just return a generic health advice message.
     return "Based on the nutritional information you provided, it's important to maintain a balanced diet and exercise regularly to stay healthy."
 
-# Start the conversation
-prompt = "The following is a conversation with a health advisor. The advisor can provide you with health advice based on nutritional information you provide. To begin, please enter your nutritional information:"
-
+def start_conversation(question):
 # Enter into a loop to keep the conversation going
-while True:
-    # Get user input
-    user_input = input("You: ")
+    while True:
+        # # Start the conversation
+        # intro = "Please enter questions or nutritional information you would like advice on:"
+        prompt = ""
+        # # Get user input
+        # question = input("\n" + intro + "\nYou: ")
 
-    # Add the user input to the prompt
-    prompt += "\nUser: " + user_input
+        # Add the user input to the prompt
+        prompt += "\nUser: " + question
 
-    # Check if the user has entered nutritional information
-    if "calories" in user_input.lower() or "fat" in user_input.lower() or "sugar" in user_input.lower():
-        # Provide health advice based on the nutritional information
-        health_advice = provide_health_advice(user_input)
+        if question.strip().lower() == "bye":
+            # End the program if the user inputs "bye"
+            print("\nGoodbye!")
+            sys.exit()
 
-        # Get a response from ChatGPT with the health advice
-        message = get_response(prompt + "\nHealth Advisor: " + health_advice)
+        # Check if the user has entered nutritional information
+        if "calories" in question.lower() or "fat" in question.lower() or "sugar" in question.lower():
+            # Provide health advice based on the nutritional information
+            health_advice = provide_health_advice(question)
 
-        # Print the response
-        print("ChatGPT:", message)
+            # Get a response from ChatGPT with the health advice
+            message = get_response(prompt + "\nHealth Advisor: " + health_advice)
 
-        # Add the response to the prompt
-        prompt += "\nChatGPT: " + message
-    else:
-        # Get a response from ChatGPT without health advice
-        message = get_response(prompt)
+            # Print the response
+            print("\nAdvice:", message)
 
-        # Print the response
-        print("ChatGPT:", message)
+            # Add the response to the prompt
+            prompt += "\nAdvice: " + message
+        else:
+            # Get a response from ChatGPT without health advice
+            message = get_response(prompt)
 
-        # Add the response to the prompt
-        prompt += "\nChatGPT: " + message
+            # Print the response
+            print("\nAdvice:", message)
+
+            # Add the response to the prompt
+            prompt += "\nAdvice: " + message
+        return message
