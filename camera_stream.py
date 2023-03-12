@@ -11,6 +11,7 @@ from serial_sensor import get_measurement
 capture = cv2.VideoCapture(0)
 firstFrame = None
 text = "Unoccupied"
+tableText = ""
 oldX = 0
 oldY = 0
 
@@ -62,6 +63,7 @@ while True:
             weight = get_measurement()
             calories = str(calories*(weight/serving_size))
             text = prediction + ", confidence: " + rating + ", calories: " + calories
+            tableText += prediction + ", calories: " + calories + "\n"
             firstFrame = gray
         else:
             oldX = x
@@ -71,6 +73,12 @@ while True:
     cv2.putText(frame, "Output: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), 
                 (10, frame.shape[0] - 10), 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                0.35, 
+                (0, 0, 255), 
+                1)
+    cv2.putText(frame, tableText, 
+                (frame.shape[1] - 50, frame.shape[0] - 100), 
                 cv2.FONT_HERSHEY_SIMPLEX, 
                 0.35, 
                 (0, 0, 255), 

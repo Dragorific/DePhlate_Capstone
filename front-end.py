@@ -35,7 +35,7 @@ class AIAdvice(Popup):
 
         self.form_layout = GridLayout(cols=1)
                
-        self.advice_text = Label(text= QUESTION, halign='center', valign='top', size_hint_y=None, height=500, text_size=(None, None))
+        self.advice_text = Label(text= QUESTION, halign='center', valign='top', size_hint_y=None, height=500, text_size=(self.width*7, None))
         self.advice_scrollview = ScrollView(size_hint=(0.8, 0.8))
         self.advice_scrollview.add_widget(self.advice_text)
         self.form_layout.add_widget(self.advice_scrollview)
