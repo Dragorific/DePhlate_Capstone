@@ -18,7 +18,7 @@ def get_measurement():
             return measurement
     else:
         #return sample measurement for demo purposes
-        return 110
+        return 31
 
 def tare():
     if(port_open):

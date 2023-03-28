@@ -4,7 +4,7 @@ import imutils
 import time
 import numpy as np
 import cv2
-from clarifai import clarifaiFood
+#from clarifai import clarifaiFood
 from nutrition import get_food_info
 from serial_sensor import get_measurement
 
@@ -20,11 +20,11 @@ if not capture.isOpened():
     raise IOError("Cannot open webcam")
 
 while True:
+    counter = 0
     ret, frame = capture.read()
     frame = cv2.flip(frame, 1)
 
-    c = cv2.waitKey(1)
-    if c == 27:
+    if cv2.waitKey(67) == 27:
         break
 
     # resize the frame, convert it to grayscale, and blur it
@@ -58,12 +58,14 @@ while True:
                 image_data = file.read()
                 image_bytes = bytes(image_data)
             
-            prediction, rating = clarifaiFood(image_bytes)
+            # prediction, rating = clarifaiFood(image_bytes)
+            prediction = "chocolate"
+            rating = "0.54"
             calories, serving_size = get_food_info(prediction.upper())
             weight = get_measurement()
             calories = str(calories*(weight/serving_size))
             text = prediction + ", confidence: " + rating + ", calories: " + calories
-            tableText += prediction + ", calories: " + calories + "\n"
+            tableText += str(weight) + "g of " + prediction + ", calories: " + calories + "\n"
             firstFrame = gray
         else:
             oldX = x
@@ -77,12 +79,15 @@ while True:
                 0.35, 
                 (0, 0, 255), 
                 1)
-    cv2.putText(frame, tableText, 
-                (frame.shape[1] - 50, frame.shape[0] - 100), 
-                cv2.FONT_HERSHEY_SIMPLEX, 
-                0.35, 
-                (0, 0, 255), 
-                1)
+    for text in tableText.split("\n"):
+        cv2.putText(frame, text, 
+                    (400, frame.shape[0] - (100 - 15*counter)), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 
+                    0.35, 
+                    (0, 0, 255), 
+                    1)
+        
+        counter += 1
 
     cv2.imshow("Tracking Feed", frame)
     cv2.imshow("Threshhold", thresh)

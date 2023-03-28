@@ -96,7 +96,7 @@ class SettingsForm(Popup):
         self.form_layout.add_widget(Label(text="Gender"))
         self.gender_input = Spinner(
             text='Select Gender',
-            values=['Male', 'Female', 'Mental Disability'],
+            values=['Male', 'Female'],
             size_hint=(None, None),
             size=(200, 50)
         )
