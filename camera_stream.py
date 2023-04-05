@@ -4,16 +4,18 @@ import imutils
 import time
 import numpy as np
 import cv2
-#from clarifai import clarifaiFood
+from clarifai import clarifaiFood
 from nutrition import get_food_info
 from serial_sensor import get_measurement
+from serial_sensor import tare
 
 capture = cv2.VideoCapture(0)
 firstFrame = None
-text = "Unoccupied"
-tableText = ""
+food_weight = {}
+food_calories = {}
 oldX = 0
 oldY = 0
+tare()
 
 # Check if the webcam is opened correctly
 if not capture.isOpened():
@@ -58,28 +60,31 @@ while True:
                 image_data = file.read()
                 image_bytes = bytes(image_data)
             
-            # prediction, rating = clarifaiFood(image_bytes)
-            prediction = "chocolate"
-            rating = "0.54"
+            prediction, rating = clarifaiFood(image_bytes)
             calories, serving_size = get_food_info(prediction.upper())
             weight = get_measurement()
-            calories = str(calories*(weight/serving_size))
-            text = prediction + ", confidence: " + rating + ", calories: " + calories
-            tableText += str(weight) + "g of " + prediction + ", calories: " + calories + "\n"
+            tare()
+            calories = calories*(weight/serving_size)
+
+            if(prediction in food_weight):
+                food_weight[prediction] = food_weight[prediction] + weight
+                food_calories[prediction] = food_calories[prediction] + calories
+            else:
+                food_weight[prediction] = weight
+                food_calories[prediction] = calories
             firstFrame = gray
         else:
             oldX = x
             oldY = y
         
-
-    cv2.putText(frame, "Output: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), 
                 (10, frame.shape[0] - 10), 
                 cv2.FONT_HERSHEY_SIMPLEX, 
                 0.35, 
                 (0, 0, 255), 
                 1)
-    for text in tableText.split("\n"):
+    for key in food_weight.keys():
+        text = str(food_weight[key]) + "g of " + key + ", calories: " + str(food_calories[key]) + "\n"
         cv2.putText(frame, text, 
                     (400, frame.shape[0] - (100 - 15*counter)), 
                     cv2.FONT_HERSHEY_SIMPLEX, 
