@@ -3,20 +3,25 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.image import Image
+from kivy.uix.image import AsyncImage
 from kivy.uix.gridlayout import GridLayout
 from kivy.graphics import Rectangle
+from kivy.graphics.texture import Texture
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.spinner import Spinner
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.clock import Clock
+from kivy.core.window import Window
+from tqdm import tqdm
+import time
 from openAIAPI import get_response
-from openAIAPI import start_conversation
 import subprocess
 import json
 
 QUESTION = ""
-
 
 class MyApp(App):
     def build(self):
@@ -53,22 +58,28 @@ class AIAdvice(Popup):
         
 
     def submit_question(self, instance):
-    # Retrieve the user's question from the TextInput
-        
-        prompt = f"I am a {age} year old {gender}, I weigh {weight} and am {height}cm tall."
+        # Read any new user data
+        with open('data.txt', 'r') as file:
+            json_data = file.read()
 
-        #ADVICE = get_response(prompt)
-        question = prompt + self.question_input.text
-    
+        data = json.loads(json_data)
+
+        age = data["user-info"]["age"]
+        gender = data["user-info"]["gender"]
+        weight = data["user-info"]["weight"]
+        height = data["user-info"]["height"]
+
+        info = [age, gender, weight, height]
+        
         # Process the user's question and display the response
-        response = start_conversation(question)
+        response = get_response(info, self.question_input.text)
         self.advice_text.text = response
 
 class SettingsForm(Popup):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.title = "Settings"
-        self.size_hint = (0.6, 0.6)
+        self.size_hint = (0.8, 0.6)
 
         self.form_layout = GridLayout(cols=2)
 
@@ -113,7 +124,7 @@ class SettingsForm(Popup):
         self.form_layout.add_widget(self.height_input)
 
         # Add the "Submit" button
-        self.submit_button = Button(text="Submit", font_size=20)
+        self.submit_button = Button(text="Submit", font_size=16)
         self.submit_button.bind(on_press=self.save_form_data)
 
         # Add a BoxLayout to center the "Submit" button
@@ -142,11 +153,13 @@ class SettingsForm(Popup):
             f.write(json.dumps(data))
             f.write("\n")
             f.close()
+            
+        data = json.loads(json_data)    
 
         # Close the popup
         self.dismiss()
     
-
+# Main Parent Grid Layout -> contains the primary app components
 class MyGridLayout(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -156,6 +169,9 @@ class MyGridLayout(GridLayout):
         self.logo = Image(source="assets/logo.png")
         self.add_widget(self.logo)
 
+        self.logo2 = Image(source="assets/logoo.png")
+        self.add_widget(self.logo2)
+        
         # Add the title
         self.title = Label(text="DePhlate AI Diet Tracker", font_size=40)
         self.add_widget(self.title)
@@ -166,17 +182,29 @@ class MyGridLayout(GridLayout):
             self.rect = Rectangle(size=self.size, pos=self.pos, texture=self.background)
             self.bind(size=self._update_rect, pos=self._update_rect)
 
-                # Add the "Start" button
-        self.start_button = Button(text="Start", font_size=40, size_hint=(None, 1), width=300, size_hint_x=0.4)
+        # Add the "Start" button
+        # self.start_button = Button(text="Start", font_size=40, size_hint=(None, 1), width=300, size_hint_x=0.4)
+        # self.start_button.bind(on_press=self.open_program)
+        cam_icon ='assets/cam.png'
+        cam_image = Image(source=cam_icon)
+        self.start_button = Button(background_normal=cam_icon, font_size=40, size_hint=(0.125 , 2), size=cam_image.texture_size)
         self.start_button.bind(on_press=self.open_program)
 
         # Add the "Settings" button
-        self.settings_button = Button(text="Settings", font_size=40, size_hint=(None, 1), width=300, size_hint_x=0.4)
+        # self.settings_button = Button(text="Settings", font_size=40, size_hint=(None, 1), width=300, size_hint_x=0.4)
+        # self.settings_button.bind(on_press=self.open_settings)
+        gear_icon ='assets/gear.png'
+        gear_image = Image(source=gear_icon)
+        self.settings_button = Button(background_normal=gear_icon, font_size=40, size_hint=(0.125 , 2), size=gear_image.texture_size)
         self.settings_button.bind(on_press=self.open_settings)
 
+
         # Add the "Health Adivce" button
-        self.advice_button = Button(text="Health Advice", font_size=35, size_hint=(None, 1), width=300, size_hint_x=0.4)
-        self.advice_button.bind(on_press=self.open_AIAdvice)        
+        chat_icon ='assets/chaticon.png'
+        chat_image = Image(source=chat_icon)
+        self.advice_button = Button(background_normal=chat_icon, font_size=40, size_hint=(0.125 , 2), size=chat_image.texture_size)
+        self.advice_button.bind(on_press=self.open_AIAdvice)
+        
 
         # Create a BoxLayout to center the two buttons horizontally
         button_box = BoxLayout(orientation='horizontal', size_hint_y=0.3, width=self.width, spacing=20)
@@ -202,9 +230,34 @@ class MyGridLayout(GridLayout):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
+class LoadingScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.loading_gif = AsyncImage(source="./assets/load1.gif", anim_delay=0.1)
+        self.add_widget(self.loading_gif)
+
+    def on_enter(self):
+        Clock.schedule_once(self.fake_loading, 0.5)
+
+    def fake_loading(self, dt):
+        for _ in tqdm(range(100), desc="Loading..."):
+            time.sleep(0.02)
+        self.manager.current = "main"
+
+class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "main"
+        self.add_widget(MyGridLayout())
+
 class MyKivyApp(App):
     def build(self):
-        return MyGridLayout()
+        # Set the size of the window to 800x600
+        Window.size = (500, 800)
+        sm = ScreenManager(transition=FadeTransition())
+        sm.add_widget(LoadingScreen(name="loading"))
+        sm.add_widget(MainScreen())
+        return sm
 
 if __name__ == "__main__":
     with open('data.txt', 'r') as file:
