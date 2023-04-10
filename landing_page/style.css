@@ -2,7 +2,7 @@ body .navbar {
   position: fixed;
   z-index: 2;
   width: 100%;
-  background-color: #2c7e81;
+  background-color: #36356F;
 }
 
 body .navbar .navbar-brand {
@@ -27,7 +27,7 @@ body .navbar .navbar-menu .dropdownList a {
 }
 
 body .navbar .navbar-menu .dropdownList .list-group-item {
-  background-color: #2c7e81;
+  background-color: #36356F;
   border-bottom: 1.5px solid rgba(0, 0, 0, 0.125);
   color: #FFFAEB;
 }
@@ -39,8 +39,8 @@ body .navbar .show {
 }
 
 body .title-box {
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(4.8%, #1A535C), color-stop(82.81%, #4ECDC4));
-  background: linear-gradient(180deg, #1A535C 4.8%, #4ECDC4 82.81%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(4.8%, #3B3978), color-stop(82.81%, #DD9D6F));
+  background: linear-gradient(180deg, #3B3978 4.8%, #DD9D6F 82.81%);
   height: 100vh;
   position: relative;
 }
@@ -129,13 +129,12 @@ body #mission-box {
 body #mission-box .header {
   font-family: 'Baumans';
   font-size: calc(2rem + 6vw);
-  color: #2c7e81;
-  margin: 0 0 24px 0;
+  color: #36356F;
+  margin: 0;
 }
 
-body #mission-box img {
-  width: calc(180px + 10vw);
-  margin: -35px calc(50% - (180px + 10vw)/2) 16px;
+body #mission-box svg {
+  margin: 0 calc(50% - 80px);
 }
 
 body #mission-box .txt {
@@ -143,16 +142,16 @@ body #mission-box .txt {
 }
 
 body #mission-box .txt .description {
-  color: #2c7e81;
+  color: #36356F;
   font-family: 'Koh Santepheap';
   font-size: calc(1rem + 1vw);
-  margin: 0;
+  margin: 24px 0 0 0;
 }
 
 body #what-box {
   height: 100vh;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(4.8%, #4ECDC4), color-stop(82.81%, #1A535C));
-  background: linear-gradient(180deg, #4ECDC4 4.8%, #1A535C 82.81%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(4.8%, #DD9D6F), color-stop(82.81%, #3B3978));
+  background: linear-gradient(180deg, #DD9D6F 4.8%, #3B3978 82.81%);
   position: relative;
 }
 
@@ -191,13 +190,12 @@ body #features-box .section {
 body #features-box .section .header {
   font-family: 'Baumans';
   font-size: calc(2rem + 6vw);
-  color: #2c7e81;
-  margin: 0 0 24px 0;
+  color: #36356F;
+  margin: 0;
 }
 
-body #features-box .section img {
-  width: calc(120px + 10vw);
-  margin: -35px calc(50% - (120px + 10vw)/2) 16px;
+body #features-box .section svg {
+  margin: 0 calc(50% - 80px) 24px;
 }
 
 body #features-box .section .txt {
@@ -211,7 +209,7 @@ body #features-box .section .txt ul {
 }
 
 body #features-box .section .txt ul li {
-  color: #2c7e81;
+  color: #36356F;
   font-family: 'Koh Santepheap';
   font-size: calc(1rem + 1vw);
   margin: 0;
