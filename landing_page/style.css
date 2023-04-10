@@ -49,7 +49,11 @@ body .title-box .brand {
   text-align: center;
   position: absolute;
   width: 100%;
-  top: 20%;
+  top: 15%;
+}
+
+body .title-box .brand img {
+  width: 43%;
 }
 
 body .title-box .brand h2 {
@@ -97,6 +101,9 @@ body .title-box .scale-img img {
 }
 
 @media only screen and (min-width: 700px) {
+  body .title-box .logo-img img {
+    width: 35%;
+  }
   body .title-box .phone-img {
     width: 33%;
   }
@@ -109,6 +116,9 @@ body .title-box .scale-img img {
 }
 
 @media only screen and (min-width: 1000px) {
+  body .title-box .logo-img img {
+    width: 25%;
+  }
   body .title-box .phone-img {
     width: 16%;
   }
