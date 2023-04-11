@@ -1,1 +1,0 @@
-{"user-id": "test_id_123", "user-info": {"age": "17", "weight": "90", "gender": "Male", "height": "190"}}

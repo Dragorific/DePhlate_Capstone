@@ -8,6 +8,8 @@ from clarifai import clarifaiFood
 from nutrition import get_food_info
 from serial_sensor import get_measurement
 from serial_sensor import tare
+from datetime import datetime
+import json
 
 capture = cv2.VideoCapture(0)
 firstFrame = None
@@ -27,6 +29,7 @@ while True:
     frame = cv2.flip(frame, 1)
 
     if cv2.waitKey(67) == 27:
+        capture.release()
         break
 
     # resize the frame, convert it to grayscale, and blur it
@@ -77,7 +80,7 @@ while True:
             oldX = x
             oldY = y
         
-    cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), 
+    cv2.putText(frame, datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), 
                 (10, frame.shape[0] - 10), 
                 cv2.FONT_HERSHEY_SIMPLEX, 
                 0.35, 
@@ -100,3 +103,15 @@ while True:
 
 capture.release()
 cv2.destroyAllWindows()
+
+now = datetime.now()
+hour = int(now.strftime("%H"))
+if(hour < 11):
+    jsonfile = "user_data/breakfast.json"
+elif(hour < 17):
+    jsonfile = "user_data/lunch.json"
+else:
+    jsonfile = "user_data/dinner.json"
+
+with open(jsonfile,"w") as outfile:
+    json.dump(food_weight, outfile)

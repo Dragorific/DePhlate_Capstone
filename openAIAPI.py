@@ -34,7 +34,7 @@ def get_response(info, prompt):
             {"role": "assistant", "content": conversation},
             {"role": "user", "content": user_input}
         ],
-        "max_tokens": 256,
+        "max_tokens": 128,
         "n": 1,
         "temperature": 0.5,
     }
